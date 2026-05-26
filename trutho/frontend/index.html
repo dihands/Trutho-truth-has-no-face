@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TRUTHO — Truth Has No Face.</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--bg:#000;--surface:#0a0a0a;--surface2:#111;--surface3:#171717;
+--border:#1f1f1f;--border2:#2a2a2a;
+--text:#f0f0f0;--text2:#a0a0a0;--text3:#555;
+--accent:#e8e8e8;--red:#c0392b;--red2:#e74c3c;--green:#27ae60;
+--font-head:'Playfair Display',serif;
+--font-body:'DM Sans',sans-serif;
+--font-mono:'IBM Plex Mono',monospace;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-height:100vh;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;font-family:var(--font-body)}
+img{max-width:100%}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:100;background:rgba(0,0,0,0.94);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 24px}
+.nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:58px;gap:16px}
+.logo{display:flex;flex-direction:column;gap:1px;cursor:pointer}
+.logo-text{font-family:var(--font-mono);font-size:18px;font-weight:500;letter-spacing:0.08em;color:#fff}
+.logo-sub{font-family:var(--font-mono);font-size:9px;color:var(--text3);letter-spacing:0.12em;text-transform:uppercase}
+.nav-links{display:flex;gap:2px}
+.nav-links button{background:none;border:none;color:var(--text2);font-size:13px;padding:6px 12px;border-radius:4px;transition:all 0.15s;font-family:var(--font-body)}
+.nav-links button:hover,.nav-links button.active{color:#fff;background:var(--surface2)}
+.nav-right{display:flex;gap:8px;align-items:center}
+.btn-ghost{background:none;border:1px solid var(--border2);color:var(--text2);font-size:12px;padding:6px 14px;border-radius:3px;transition:all 0.15s;letter-spacing:0.04em}
+.btn-ghost:hover{border-color:#555;color:#fff}
+.btn-solid{background:#fff;border:1px solid #fff;color:#000;font-size:12px;padding:6px 14px;border-radius:3px;font-weight:500;letter-spacing:0.04em;transition:all 0.15s}
+.btn-solid:hover{background:#ddd}
+.btn-danger{background:var(--red);border:1px solid var(--red);color:#fff;font-size:12px;padding:6px 14px;border-radius:3px;letter-spacing:0.04em}
+
+/* ── TICKER ── */
+.ticker{background:var(--surface);border-bottom:1px solid var(--border);padding:7px 24px;overflow:hidden}
+.ticker-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:16px}
+.ticker-label{font-family:var(--font-mono);font-size:10px;color:var(--text3);letter-spacing:0.1em;white-space:nowrap;text-transform:uppercase}
+.ticker-wrap{display:flex;gap:28px;font-size:12px;color:var(--text2);white-space:nowrap;overflow:hidden}
+.ticker-item{display:flex;align-items:center;gap:6px}
+.live-dot{width:5px;height:5px;border-radius:50%;background:var(--red2);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+.ws-status{font-family:var(--font-mono);font-size:10px;padding:2px 8px;border-radius:2px;border:1px solid;margin-left:auto}
+.ws-ok{color:var(--green);border-color:var(--green)}
+.ws-off{color:var(--text3);border-color:var(--text3)}
+
+/* ── STATS BAR ── */
+.stats-bar{max-width:1200px;margin:0 auto;padding:20px 24px 0;display:flex;gap:28px;align-items:center;flex-wrap:wrap}
+.stat-item{display:flex;flex-direction:column;gap:2px}
+.stat-num{font-family:var(--font-mono);font-size:22px;color:#fff;letter-spacing:-0.02em}
+.stat-label{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em}
+.stat-div{width:1px;height:32px;background:var(--border2)}
+
+/* ── SEARCH ── */
+.search-bar{padding:16px 24px;border-bottom:1px solid var(--border);background:var(--surface);margin-top:18px}
+.search-inner{max-width:1200px;margin:0 auto;display:flex;gap:8px}
+.search-input{flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);font-size:14px;padding:10px 16px;border-radius:2px;outline:none;font-family:var(--font-body);transition:border-color 0.15s}
+.search-input:focus{border-color:var(--border2)}
+.search-btn{background:none;border:1px solid var(--border2);color:var(--text2);font-size:12px;padding:10px 20px;border-radius:2px;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.06em;transition:all 0.15s}
+.search-btn:hover{color:#fff;border-color:#555}
+
+/* ── MAIN LAYOUT ── */
+.main-layout{max-width:1200px;margin:0 auto;padding:28px 24px;display:grid;grid-template-columns:1fr 310px;gap:36px}
+@media(max-width:900px){.main-layout{grid-template-columns:1fr}.sidebar{display:none}}
+
+/* ── CATEGORY FILTER ── */
+.cat-filter{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:24px}
+.cat-btn{background:none;border:1px solid var(--border);color:var(--text3);font-size:11px;padding:5px 12px;border-radius:2px;transition:all 0.15s;letter-spacing:0.06em;text-transform:uppercase;font-family:var(--font-mono)}
+.cat-btn:hover,.cat-btn.active{border-color:#555;color:#fff;background:var(--surface2)}
+
+/* ── SECTION HEADER ── */
+.section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.section-title{font-family:var(--font-mono);font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.12em}
+
+/* ── POST CARDS ── */
+.post-card{display:flex;gap:16px;padding:20px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:all 0.15s;animation:fadeIn 0.35s ease both}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.post-card:hover .post-title{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.post-thumb{width:108px;height:72px;background:var(--surface3);border:1px solid var(--border);border-radius:2px;flex-shrink:0;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.post-thumb img{width:100%;height:100%;object-fit:cover}
+.thumb-placeholder{font-family:var(--font-mono);font-size:9px;color:var(--text3);text-align:center;line-height:1.8;padding:6px}
+.post-body{flex:1;min-width:0}
+.post-meta-top{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.post-category{font-family:var(--font-mono);font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;border:1px solid var(--border);padding:2px 6px;border-radius:1px}
+.cat-Corruption{color:#e74c3c;border-color:#c0392b40}
+.cat-Crime{color:#e67e22;border-color:#d3540030}
+.cat-Harassment{color:#9b59b6;border-color:#8e44ad30}
+.cat-Government{color:#3498db;border-color:#2980b930}
+.cat-Scam{color:#f1c40f;border-color:#f39c1230}
+.cat-Road{color:#1abc9c;border-color:#16a08530}
+.cat-Healthcare{color:#e91e63;border-color:#e91e6330}
+.cat-Environment{color:#4caf50;border-color:#4caf5030}
+.cat-Education{color:#00bcd4;border-color:#00bcd430}
+.cat-Police{color:#ff5722;border-color:#ff572230}
+.cat-Public{color:#607d8b;border-color:#607d8b30}
+.badge-trend{font-family:var(--font-mono);font-size:10px;color:var(--red2);letter-spacing:0.06em}
+.badge-verified{font-family:var(--font-mono);font-size:10px;color:var(--green);letter-spacing:0.06em}
+.post-title{font-family:var(--font-head);font-size:17px;line-height:1.35;color:var(--text);margin-bottom:6px;transition:color 0.15s;font-weight:600}
+.post-excerpt{font-size:13px;color:var(--text2);line-height:1.6;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:10px}
+.post-meta-bottom{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.post-author{font-family:var(--font-mono);font-size:11px;color:var(--text3)}
+.post-stat{font-family:var(--font-mono);font-size:11px;color:var(--text3)}
+.post-time{font-family:var(--font-mono);font-size:11px;color:var(--text3);margin-left:auto}
+
+/* ── SIDEBAR ── */
+.sidebar-section{margin-bottom:32px}
+.trending-item{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);cursor:pointer;align-items:flex-start;transition:opacity 0.15s}
+.trending-item:last-child{border-bottom:none}
+.trending-item:hover{opacity:0.75}
+.trending-num{font-family:var(--font-mono);font-size:22px;color:var(--border2);font-weight:700;line-height:1;min-width:28px}
+.trending-title{font-size:13px;line-height:1.4;color:var(--text);margin-bottom:4px}
+.trending-meta{font-family:var(--font-mono);font-size:10px;color:var(--text3)}
+.category-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.cat-tile{background:var(--surface);border:1px solid var(--border);padding:10px 12px;border-radius:2px;cursor:pointer;transition:all 0.15s}
+.cat-tile:hover{background:var(--surface2);border-color:var(--border2)}
+.cat-tile-name{font-size:12px;color:var(--text2);font-weight:500}
+.cat-tile-count{font-family:var(--font-mono);font-size:10px;color:var(--text3);margin-top:2px}
+.alert-box{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--red);padding:16px}
+.alert-title{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--text3);margin-bottom:8px}
+.alert-text{font-size:12px;color:var(--text2);line-height:1.65}
+
+/* ── ARTICLE VIEW ── */
+.article-view{display:none;position:fixed;inset:0;background:#000;z-index:200;overflow-y:auto;padding-bottom:80px}
+.article-view.open{display:block;animation:slideUp 0.3s ease}
+@keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.article-inner{max-width:740px;margin:0 auto;padding:40px 24px}
+.article-back{display:flex;align-items:center;gap:8px;font-family:var(--font-mono);font-size:11px;color:var(--text3);cursor:pointer;margin-bottom:32px;border:none;background:none;transition:color 0.15s;text-transform:uppercase;letter-spacing:0.08em}
+.article-back:hover{color:#fff}
+.article-cat{font-family:var(--font-mono);font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:12px}
+.article-title{font-family:var(--font-head);font-size:36px;line-height:1.25;color:#fff;margin-bottom:16px;font-weight:700}
+.article-subtitle{font-size:17px;color:var(--text2);line-height:1.7;margin-bottom:24px;border-left:2px solid var(--border2);padding-left:16px}
+.article-byline{display:flex;align-items:center;gap:16px;padding:16px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-bottom:32px;flex-wrap:wrap}
+.byline-avatar{width:36px;height:36px;background:var(--surface3);border:1px solid var(--border2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:11px;color:var(--text3);flex-shrink:0}
+.byline-name{font-size:13px;color:var(--text);font-weight:500}
+.byline-time{font-family:var(--font-mono);font-size:11px;color:var(--text3)}
+.anon-hint{display:flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:10px;color:var(--text3);margin-left:auto}
+.article-media{width:100%;margin-bottom:32px;border:1px solid var(--border)}
+.article-media img{width:100%;max-height:480px;object-fit:cover;display:block}
+.article-media video{width:100%;max-height:480px;display:block}
+.article-media-placeholder{background:var(--surface);height:280px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px}
+.article-body{font-size:16px;line-height:1.9;color:var(--text2)}
+.article-body p{margin-bottom:1.5em}
+.article-actions{display:flex;gap:10px;margin-top:40px;padding-top:24px;border-top:1px solid var(--border);flex-wrap:wrap}
+.action-btn{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);color:var(--text2);font-size:13px;padding:10px 18px;border-radius:2px;transition:all 0.15s;font-family:var(--font-body)}
+.action-btn:hover{border-color:#555;color:#fff}
+.action-btn.liked{color:var(--green);border-color:var(--green)}
+.action-btn.disliked{color:var(--red2);border-color:var(--red)}
+.verif-badge{font-family:var(--font-mono);font-size:11px;padding:4px 10px;border-radius:2px;border:1px solid}
+.verif-unverified{color:var(--text3);border-color:var(--text3)}
+.verif-community{color:#f39c12;border-color:#f39c12}
+.verif-moderator{color:var(--green);border-color:var(--green)}
+
+/* ── COMMENTS ── */
+.comments-section{margin-top:48px}
+.comment-form{margin-bottom:28px}
+.comment-input{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);font-size:14px;padding:14px 16px;border-radius:2px;resize:vertical;min-height:80px;font-family:var(--font-body);outline:none;line-height:1.6;transition:border-color 0.15s}
+.comment-input:focus{border-color:var(--border2)}
+.comment-actions{display:flex;gap:8px;margin-top:8px;align-items:center}
+.comment-submit{background:var(--surface2);border:1px solid var(--border2);color:var(--text2);font-size:12px;padding:8px 20px;border-radius:2px;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:0.06em;transition:all 0.15s}
+.comment-submit:hover{color:#fff;border-color:#555}
+.comment-note{font-family:var(--font-mono);font-size:10px;color:var(--text3);margin-left:auto}
+.comment{padding:16px 0;border-bottom:1px solid var(--border);animation:fadeIn 0.3s ease}
+.comment-meta{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.comment-author{font-family:var(--font-mono);font-size:12px;color:var(--text3)}
+.comment-time{font-family:var(--font-mono);font-size:11px;color:var(--border2)}
+.comment-text{font-size:14px;color:var(--text2);line-height:1.65}
+
+/* ── MODALS ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.82);z-index:300;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex;animation:fadeOver 0.2s ease}
+@keyframes fadeOver{from{opacity:0}to{opacity:1}}
+.modal{background:var(--surface);border:1px solid var(--border);padding:32px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;animation:modalIn 0.2s ease}
+@keyframes modalIn{from{transform:scale(0.97);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.modal-title{font-family:var(--font-mono);font-size:13px;text-transform:uppercase;letter-spacing:0.1em;color:var(--text)}
+.modal-close{background:none;border:none;color:var(--text3);font-size:22px;cursor:pointer;transition:color 0.15s;line-height:1}
+.modal-close:hover{color:#fff}
+.form-group{margin-bottom:20px}
+.form-label{display:block;font-family:var(--font-mono);font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px}
+.form-input,.form-select,.form-textarea{width:100%;background:var(--bg);border:1px solid var(--border);color:var(--text);font-size:14px;padding:10px 14px;border-radius:2px;outline:none;font-family:var(--font-body);transition:border-color 0.15s}
+.form-input:focus,.form-select:focus,.form-textarea:focus{border-color:var(--border2)}
+.form-select{cursor:pointer}
+.form-textarea{resize:vertical;min-height:130px;line-height:1.65}
+.form-hint{font-size:12px;color:var(--text3);margin-top:6px;line-height:1.5}
+.form-submit{width:100%;background:#fff;border:none;color:#000;font-size:13px;padding:13px;border-radius:2px;font-weight:500;letter-spacing:0.06em;cursor:pointer;transition:background 0.15s;font-family:var(--font-mono);text-transform:uppercase;margin-top:6px}
+.form-submit:hover{background:#e0e0e0}
+.form-submit:disabled{background:#333;color:#666;cursor:not-allowed}
+.form-divider{text-align:center;font-family:var(--font-mono);font-size:11px;color:var(--text3);margin:16px 0}
+.anon-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px}
+.anon-chip{background:var(--surface3);border:1px solid var(--border);padding:8px 12px;border-radius:2px;cursor:pointer;transition:border-color 0.15s;font-family:var(--font-mono);font-size:12px;color:var(--text);text-align:left}
+.anon-chip:hover{border-color:var(--border2)}
+.upload-zone{border:1px dashed var(--border2);padding:24px;text-align:center;cursor:pointer;transition:all 0.15s;border-radius:2px;position:relative}
+.upload-zone:hover{border-color:#555;background:var(--surface3)}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-icon{font-size:28px;color:var(--text3);margin-bottom:8px}
+.upload-text{font-size:13px;color:var(--text3);line-height:1.5}
+.privacy-box{background:var(--surface3);border:1px solid var(--border);padding:12px 16px;display:flex;align-items:flex-start;gap:10px;margin-top:16px;border-radius:2px}
+.privacy-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.privacy-text{font-size:12px;color:var(--text3);line-height:1.6}
+.form-error{font-size:12px;color:var(--red2);margin-top:6px;font-family:var(--font-mono)}
+.user-pill{background:var(--surface2);border:1px solid var(--border2);padding:5px 12px;border-radius:2px;font-family:var(--font-mono);font-size:12px;color:var(--text)}
+
+/* ── LOADING ── */
+.loader{text-align:center;padding:60px 20px}
+.loader-text{font-family:var(--font-mono);font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:0.12em;animation:blink 1.2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.empty-state{text-align:center;padding:60px 20px}
+.empty-title{font-family:var(--font-mono);font-size:13px;color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--surface2);border:1px solid var(--border2);color:var(--text);font-size:13px;padding:12px 20px;border-radius:2px;z-index:1000;font-family:var(--font-mono);opacity:0;pointer-events:none;transition:opacity 0.2s,transform 0.2s;transform:translateY(8px)}
+.toast.show{opacity:1;pointer-events:auto;transform:translateY(0)}
+.toast.err{border-color:var(--red);color:var(--red2)}
+.toast.ok{border-color:var(--green);color:var(--green)}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="nav-inner">
+    <div class="logo" onclick="loadFeed('all')">
+      <span class="logo-text">TRUTHO</span>
+      <span class="logo-sub">Truth Has No Face.</span>
+    </div>
+    <div class="nav-links">
+      <button class="active" id="nav-home" onclick="navClick(this,'home')">Home</button>
+      <button id="nav-trending" onclick="navClick(this,'trending')">Trending</button>
+      <button id="nav-latest" onclick="navClick(this,'latest')">Latest</button>
+    </div>
+    <div class="nav-right" id="navRight">
+      <button class="btn-ghost" onclick="openModal('loginModal')">Login</button>
+      <button class="btn-ghost" onclick="openModal('registerModal')">Register</button>
+      <button class="btn-solid" onclick="openModal('createModal')">+ Report</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ── TICKER ── -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-label">Live</span>
+    <div class="ticker-wrap" id="tickerWrap">
+      <span class="ticker-item"><span class="live-dot"></span>Trutho is live</span>
+    </div>
+    <span class="ws-status ws-off" id="wsStatus">OFFLINE</span>
+  </div>
+</div>
+
+<!-- ── STATS ── -->
+<div class="stats-bar" id="statsBar">
+  <div class="stat-item"><span class="stat-num" id="statPosts">—</span><span class="stat-label">Reports</span></div>
+  <div class="stat-div"></div>
+  <div class="stat-item"><span class="stat-num" id="statUsers">—</span><span class="stat-label">Sources</span></div>
+  <div class="stat-div"></div>
+  <div class="stat-item"><span class="stat-num" id="statComments">—</span><span class="stat-label">Comments</span></div>
+  <div class="stat-div"></div>
+  <div class="stat-item"><span class="stat-num">0</span><span class="stat-label">Identities Exposed</span></div>
+</div>
+
+<!-- ── SEARCH ── -->
+<div class="search-bar">
+  <div class="search-inner">
+    <input class="search-input" id="searchInput" placeholder="Search reports, incidents, issues..." onkeydown="if(event.key==='Enter')doSearch()">
+    <button class="search-btn" onclick="doSearch()">Search</button>
+  </div>
+</div>
+
+<!-- ── MAIN ── -->
+<div class="main-layout">
+  <div class="feed">
+    <div class="cat-filter" id="catFilter">
+      <button class="cat-btn active" onclick="filterCat(this,'')">All</button>
+      <button class="cat-btn" onclick="filterCat(this,'Corruption')">Corruption</button>
+      <button class="cat-btn" onclick="filterCat(this,'Crime')">Crime</button>
+      <button class="cat-btn" onclick="filterCat(this,'Harassment')">Harassment</button>
+      <button class="cat-btn" onclick="filterCat(this,'Government Issue')">Government</button>
+      <button class="cat-btn" onclick="filterCat(this,'Scam')">Scam</button>
+      <button class="cat-btn" onclick="filterCat(this,'Road Problem')">Road</button>
+      <button class="cat-btn" onclick="filterCat(this,'Healthcare')">Healthcare</button>
+      <button class="cat-btn" onclick="filterCat(this,'Environment')">Environment</button>
+      <button class="cat-btn" onclick="filterCat(this,'Police Abuse')">Police Abuse</button>
+      <button class="cat-btn" onclick="filterCat(this,'Public Safety')">Public Safety</button>
+    </div>
+    <div id="postList"><div class="loader"><div class="loader-text">Loading reports...</div></div></div>
+  </div>
+
+  <div class="sidebar">
+    <div class="sidebar-section">
+      <div class="section-header"><span class="section-title">Trending Now</span></div>
+      <div id="trendingList"><div class="loader-text" style="font-family:var(--font-mono);font-size:11px;color:var(--text3)">Loading...</div></div>
+    </div>
+    <div class="sidebar-section">
+      <div class="section-header"><span class="section-title">Browse by Category</span></div>
+      <div class="category-grid">
+        <div class="cat-tile" onclick="filterCat(null,'Corruption')"><div class="cat-tile-name">Corruption</div></div>
+        <div class="cat-tile" onclick="filterCat(null,'Crime')"><div class="cat-tile-name">Crime</div></div>
+        <div class="cat-tile" onclick="filterCat(null,'Harassment')"><div class="cat-tile-name">Harassment</div></div>
+        <div class="cat-tile" onclick="filterCat(null,'Government Issue')"><div class="cat-tile-name">Government</div></div>
+        <div class="cat-tile" onclick="filterCat(null,'Scam')"><div class="cat-tile-name">Scam</div></div>
+        <div class="cat-tile" onclick="filterCat(null,'Healthcare')"><div class="cat-tile-name">Healthcare</div></div>
+        <div class="cat-tile" onclick="filterCat(null,'Environment')"><div class="cat-tile-name">Environment</div></div>
+        <div class="cat-tile" onclick="filterCat(null,'Police Abuse')"><div class="cat-tile-name">Police Abuse</div></div>
+      </div>
+    </div>
+    <div class="alert-box">
+      <div class="alert-title">🔒 Your Safety</div>
+      <div class="alert-text">All reports are 100% anonymous. We strip all metadata from uploaded media. No real identity is ever stored or exposed. You are protected.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── ARTICLE VIEW ── -->
+<div class="article-view" id="articleView">
+  <div class="article-inner" id="articleInner"></div>
+</div>
+
+<!-- ── LOGIN MODAL ── -->
+<div class="modal-overlay" id="loginModal" onclick="clickOutClose(event,'loginModal')">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Anonymous Sign In</span>
+      <button class="modal-close" onclick="closeModal('loginModal')">×</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Username</label>
+      <input class="form-input" id="loginUser" placeholder="Your anonymous handle" type="text" autocomplete="username">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input class="form-input" id="loginPass" placeholder="••••••••" type="password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="form-error" id="loginErr"></div>
+    <button class="form-submit" id="loginBtn" onclick="doLogin()">Sign In Anonymously</button>
+    <div class="privacy-box" style="margin-top:14px">
+      <span class="privacy-icon">🔒</span>
+      <span class="privacy-text">No email. No phone. No real name. You are protected.</span>
+    </div>
+    <div class="form-divider">No account yet?</div>
+    <button class="form-submit" style="background:transparent;color:var(--text2);border:1px solid var(--border2);margin-top:0" onclick="closeModal('loginModal');openModal('registerModal')">Create Anonymous Account</button>
+  </div>
+</div>
+
+<!-- ── REGISTER MODAL ── -->
+<div class="modal-overlay" id="registerModal" onclick="clickOutClose(event,'registerModal')">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Create Anonymous Identity</span>
+      <button class="modal-close" onclick="closeModal('registerModal')">×</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Username <span style="color:var(--text3)">(optional — we'll generate one)</span></label>
+      <input class="form-input" id="regUser" placeholder="Leave blank for random anonymous name" type="text" autocomplete="off">
+    </div>
+    <div class="form-group" id="anonSuggestGroup">
+      <label class="form-label">Or pick a suggested name</label>
+      <div class="anon-grid" id="anonGrid">
+        <div class="loader-text" style="font-family:var(--font-mono);font-size:11px;color:var(--text3)">Loading suggestions...</div>
+      </div>
+      <button class="cat-btn" style="margin-top:6px" onclick="loadSuggestions()">↺ Refresh suggestions</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <input class="form-input" id="regPass" placeholder="Min. 6 characters" type="password" autocomplete="new-password" onkeydown="if(event.key==='Enter')doRegister()">
+      <div class="form-hint">Choose a strong password you'll remember. No recovery option — stay anonymous.</div>
+    </div>
+    <div class="form-error" id="regErr"></div>
+    <button class="form-submit" id="regBtn" onclick="doRegister()">Register — Stay Anonymous</button>
+    <div class="privacy-box">
+      <span class="privacy-icon">🛡️</span>
+      <span class="privacy-text">No email required. No phone number. Zero personal data collected. Your identity is never exposed.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── CREATE POST MODAL ── -->
+<div class="modal-overlay" id="createModal" onclick="clickOutClose(event,'createModal')">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Submit Anonymous Report</span>
+      <button class="modal-close" onclick="closeModal('createModal')">×</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Headline *</label>
+      <input class="form-input" id="newTitle" placeholder="Brief, factual headline" type="text" maxlength="300">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Category *</label>
+      <select class="form-select" id="newCat">
+        <option value="">Select a category</option>
+        <option>Corruption</option>
+        <option>Crime</option>
+        <option>Harassment</option>
+        <option>Road Problem</option>
+        <option>Government Issue</option>
+        <option>Scam</option>
+        <option>Environment</option>
+        <option>Education</option>
+        <option>Healthcare</option>
+        <option>Police Abuse</option>
+        <option>Public Safety</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Full Report *</label>
+      <textarea class="form-textarea" id="newBody" placeholder="Describe what you witnessed in full detail. Stick to facts. Minimum 20 characters." style="min-height:160px"></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Attach Media <span style="color:var(--text3)">(optional — EXIF stripped)</span></label>
+      <div class="upload-zone" id="uploadZone">
+        <input type="file" id="mediaFile" accept="image/*,video/mp4,video/webm" onchange="previewFile()">
+        <div class="upload-icon">📎</div>
+        <div class="upload-text" id="uploadText">Click or drag to attach image or video<br><small>GPS & camera data removed automatically</small></div>
+      </div>
+      <div id="filePreview" style="margin-top:8px;display:none">
+        <img id="previewImg" style="max-height:120px;border:1px solid var(--border);display:none">
+      </div>
+    </div>
+    <div class="form-error" id="createErr"></div>
+    <button class="form-submit" id="createBtn" onclick="submitPost()">Submit Report Anonymously</button>
+    <div class="privacy-box">
+      <span class="privacy-icon">🔐</span>
+      <span class="privacy-text">Rate-limited. Anti-spam active. All media metadata stripped. Login optional for posting.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOAST ── -->
+<div class="toast" id="toastEl"></div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// CONFIG — change this to your backend URL
+// ═══════════════════════════════════════════════════
+const API = 'http://localhost:8000';
+
+const WS  = 'ws://localhost:8000';
+
+// ═══════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════
+let token = localStorage.getItem('trutho_token') || null;
+let currentUser = JSON.parse(localStorage.getItem('trutho_user') || 'null');
+let currentFilter = '';
+let currentMode = 'home'; // home | trending | latest
+let currentPostId = null;
+let ws = null;
+let wsRetryTimer = null;
+
+// ═══════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════
+function authHeader() {
+  return token ? { 'Authorization': `Bearer ${token}` } : {};
+}
+
+async function api(method, path, body, isForm) {
+  const opts = {
+    method,
+    headers: { ...authHeader() },
+  };
+  if (body && !isForm) {
+    opts.headers['Content-Type'] = 'application/json';
+    opts.body = JSON.stringify(body);
+  } else if (body && isForm) {
+    opts.body = body; // FormData
+  }
+  const res = await fetch(API + path, opts);
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.detail || 'Request failed');
+  return data;
+}
+
+function timeAgo(iso) {
+  const diff = Math.floor((Date.now() - new Date(iso)) / 1000);
+  if (diff < 60) return `${diff}s ago`;
+  if (diff < 3600) return `${Math.floor(diff/60)}m ago`;
+  if (diff < 86400) return `${Math.floor(diff/3600)}h ago`;
+  return `${Math.floor(diff/86400)}d ago`;
+}
+
+function catCssClass(cat) {
+  const first = (cat || '').split(' ')[0];
+  return 'cat-' + first;
+}
+
+function verifBadge(status) {
+  const map = {
+    'unverified': ['verif-unverified', 'Unverified'],
+    'community_verified': ['verif-community', '✓ Community Verified'],
+    'moderator_verified': ['verif-moderator', '✓ Moderator Verified'],
+  };
+  const [cls, label] = map[status] || ['verif-unverified', 'Unverified'];
+  return `<span class="verif-badge ${cls}">${label}</span>`;
+}
+
+// ═══════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════
+let toastTimer;
+function toast(msg, type='') {
+  const el = document.getElementById('toastEl');
+  el.textContent = msg;
+  el.className = 'toast show' + (type ? ` ${type}` : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// ═══════════════════════════════════════════════════
+// AUTH UI
+// ═══════════════════════════════════════════════════
+function updateNavAuth() {
+  const nav = document.getElementById('navRight');
+  if (currentUser) {
+    nav.innerHTML = `
+      <span class="user-pill">@${currentUser.username}</span>
+      <button class="btn-solid" onclick="openModal('createModal')">+ Report</button>
+      <button class="btn-ghost" onclick="doLogout()">Sign Out</button>`;
+  } else {
+    nav.innerHTML = `
+      <button class="btn-ghost" onclick="openModal('loginModal')">Login</button>
+      <button class="btn-ghost" onclick="openModal('registerModal')">Register</button>
+      <button class="btn-solid" onclick="openModal('createModal')">+ Report</button>`;
+  }
+}
+
+async function doLogin() {
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value;
+  const err = document.getElementById('loginErr');
+  if (!u || !p) { err.textContent = 'Enter username and password'; return; }
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true; btn.textContent = 'Signing in...';
+  err.textContent = '';
+  try {
+    const data = await api('POST', '/auth/login', { username: u, password: p });
+    token = data.access_token;
+    currentUser = { username: data.username, user_id: data.user_id };
+    localStorage.setItem('trutho_token', token);
+    localStorage.setItem('trutho_user', JSON.stringify(currentUser));
+    closeModal('loginModal');
+    updateNavAuth();
+    toast(`Welcome back, @${data.username}`, 'ok');
+  } catch(e) {
+    err.textContent = e.message;
+  } finally {
+    btn.disabled = false; btn.textContent = 'Sign In Anonymously';
+  }
+}
+
+async function doRegister() {
+  const u = document.getElementById('regUser').value.trim();
+  const p = document.getElementById('regPass').value;
+  const err = document.getElementById('regErr');
+  if (!p) { err.textContent = 'Password required'; return; }
+  const btn = document.getElementById('regBtn');
+  btn.disabled = true; btn.textContent = 'Creating account...';
+  err.textContent = '';
+  try {
+    const data = await api('POST', '/auth/register', { username: u || undefined, password: p });
+    token = data.access_token;
+    currentUser = { username: data.username, user_id: data.user_id };
+    localStorage.setItem('trutho_token', token);
+    localStorage.setItem('trutho_user', JSON.stringify(currentUser));
+    closeModal('registerModal');
+    updateNavAuth();
+    toast(`Account created — @${data.username} — identity protected`, 'ok');
+  } catch(e) {
+    err.textContent = e.message;
+  } finally {
+    btn.disabled = false; btn.textContent = 'Register — Stay Anonymous';
+  }
+}
+
+function doLogout() {
+  token = null; currentUser = null;
+  localStorage.removeItem('trutho_token');
+  localStorage.removeItem('trutho_user');
+  updateNavAuth();
+  toast('Signed out');
+}
+
+async function loadSuggestions() {
+  const grid = document.getElementById('anonGrid');
+  grid.innerHTML = '<div class="loader-text" style="font-size:11px;color:var(--text3);font-family:var(--font-mono)">Loading...</div>';
+  try {
+    const data = await api('GET', '/auth/suggest-username');
+    grid.innerHTML = data.suggestions.slice(0,6).map(n =>
+      `<button class="anon-chip" onclick="document.getElementById('regUser').value='${n}'">${n}</button>`
+    ).join('');
+  } catch {
+    grid.innerHTML = '';
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// STATS
+// ═══════════════════════════════════════════════════
+async function loadStats() {
+  try {
+    const s = await api('GET', '/posts/stats');
+    document.getElementById('statPosts').textContent = s.total_posts.toLocaleString();
+    document.getElementById('statUsers').textContent = s.total_users.toLocaleString();
+    document.getElementById('statComments').textContent = s.total_comments.toLocaleString();
+  } catch {}
+}
+
+// ═══════════════════════════════════════════════════
+// POSTS FEED
+// ═══════════════════════════════════════════════════
+function renderPosts(posts) {
+  const el = document.getElementById('postList');
+  if (!posts.length) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-title">No reports found</div><p style="font-size:13px;color:var(--text3);margin-top:8px">Be the first to submit a report in this category.</p></div>';
+    return;
+  }
+  el.innerHTML = posts.map((p, i) => {
+    const thumb = p.media_url
+      ? (p.media_type === 'image'
+        ? `<img src="${API}${p.media_url}" alt="media" loading="lazy">`
+        : `<div class="thumb-placeholder">VIDEO<br>REPORT</div>`)
+      : `<div class="thumb-placeholder">NO<br>MEDIA</div>`;
+    const trendBadge = p.trending_score > 10 ? '<span class="badge-trend">▲ TRENDING</span>' : '';
+    const verifB = p.verification_status !== 'unverified' ? `<span class="badge-verified">✓ VERIFIED</span>` : '';
+    const excerpt = p.body.length > 140 ? p.body.slice(0,140) + '…' : p.body;
+    return `<div class="post-card" style="animation-delay:${i*0.04}s" onclick="openPost(${p.id})">
+      <div class="post-thumb">${thumb}</div>
+      <div class="post-body">
+        <div class="post-meta-top">
+          <span class="post-category ${catCssClass(p.category)}">${p.category}</span>
+          ${trendBadge}${verifB}
+        </div>
+        <div class="post-title">${p.title}</div>
+        <div class="post-excerpt">${excerpt}</div>
+        <div class="post-meta-bottom">
+          <span class="post-author">@${p.author_username}</span>
+          <span class="post-stat">👁 ${p.views.toLocaleString()}</span>
+          <span class="post-stat">💬 ${p.comment_count}</span>
+          <span class="post-stat">↑ ${p.likes}</span>
+          <span class="post-time">${timeAgo(p.created_at)}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function loadFeed(cat, search) {
+  document.getElementById('postList').innerHTML = '<div class="loader"><div class="loader-text">Loading reports...</div></div>';
+  try {
+    let path = '/posts?limit=30';
+    if (cat) path += `&category=${encodeURIComponent(cat)}`;
+    if (search) path += `&search=${encodeURIComponent(search)}`;
+    const posts = await api('GET', path);
+    renderPosts(posts);
+  } catch(e) {
+    document.getElementById('postList').innerHTML = `<div class="empty-state"><div class="empty-title">Connection Error</div><p style="font-size:13px;color:var(--text3);margin-top:6px">Cannot connect to backend. Is the server running?<br><small>${e.message}</small></p></div>`;
+  }
+}
+
+async function loadTrending() {
+  try {
+    const posts = await api('GET', '/posts/trending?limit=20');
+    renderPosts(posts);
+    // sidebar trending
+    const el = document.getElementById('trendingList');
+    el.innerHTML = posts.slice(0,5).map((p,i) =>
+      `<div class="trending-item" onclick="openPost(${p.id})">
+        <span class="trending-num">0${i+1}</span>
+        <div>
+          <div class="trending-title">${p.title.slice(0,70)}${p.title.length>70?'…':''}</div>
+          <div class="trending-meta">${p.views.toLocaleString()} views · ${p.category}</div>
+        </div>
+      </div>`
+    ).join('');
+  } catch {}
+}
+
+function filterCat(btn, cat) {
+  currentFilter = cat;
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  else document.querySelector('.cat-btn').classList.remove('active');
+  loadFeed(cat);
+}
+
+function doSearch() {
+  const q = document.getElementById('searchInput').value.trim();
+  loadFeed(currentFilter, q);
+}
+
+function navClick(btn, mode) {
+  currentMode = mode;
+  document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (mode === 'trending') {
+    loadTrending();
+  } else if (mode === 'latest') {
+    loadFeed('');
+  } else {
+    loadFeed(currentFilter);
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// ARTICLE / POST VIEW
+// ═══════════════════════════════════════════════════
+async function openPost(id) {
+  currentPostId = id;
+  const view = document.getElementById('articleView');
+  document.getElementById('articleInner').innerHTML = '<div class="loader"><div class="loader-text">Loading report...</div></div>';
+  view.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  view.scrollTop = 0;
+  try {
+    const p = await api('GET', `/posts/${id}`);
+    renderArticle(p);
+    loadComments(id);
+  } catch(e) {
+    document.getElementById('articleInner').innerHTML = `<button class="article-back" onclick="closeArticle()">← Back</button><div style="color:var(--text3)">${e.message}</div>`;
+  }
+}
+
+function renderArticle(p) {
+  let media = '';
+  if (p.media_url) {
+    if (p.media_type === 'image') {
+      media = `<div class="article-media"><img src="${API}${p.media_url}" alt="Evidence"></div>`;
+    } else {
+      media = `<div class="article-media"><video controls src="${API}${p.media_url}"></video></div>`;
+    }
+  } else {
+    media = `<div class="article-media article-media-placeholder"><span style="font-size:36px;opacity:0.12">📷</span><span style="font-family:var(--font-mono);font-size:11px;color:var(--text3)">No media attached</span></div>`;
+  }
+  const av = p.author_username ? p.author_username.slice(0,2).toUpperCase() : 'AN';
+
+  document.getElementById('articleInner').innerHTML = `
+    <button class="article-back" onclick="closeArticle()">← Back to Reports</button>
+    <div class="article-cat">${p.category} · ${timeAgo(p.created_at)}</div>
+    <h1 class="article-title">${p.title}</h1>
+    <div class="article-subtitle">${p.body.slice(0,200)}${p.body.length>200?'…':''}</div>
+    <div class="article-byline">
+      <div class="byline-avatar">${av}</div>
+      <div>
+        <div class="byline-name">@${p.author_username}</div>
+        <div class="byline-time">Anonymous Contributor · ${timeAgo(p.created_at)}</div>
+      </div>
+      ${verifBadge(p.verification_status)}
+      <div class="anon-hint" style="margin-left:auto">🛡 Identity Protected</div>
+    </div>
+    ${media}
+    <div class="article-body">${p.body.split('\n').filter(Boolean).map(l=>`<p>${l}</p>`).join('')}</div>
+    <div class="article-actions">
+      <button class="action-btn" id="likeBtn" onclick="reactPost(${p.id},'like')">↑ <span id="likeCount">${p.likes}</span> Support</button>
+      <button class="action-btn" id="dislikeBtn" onclick="reactPost(${p.id},'dislike')">↓ <span id="dislikeCount">${p.dislikes}</span></button>
+      <button class="action-btn" onclick="sharePost(${p.id})">⤴ Share</button>
+      <button class="action-btn" style="margin-left:auto" onclick="toast('Report flagged for review')">⚑ Flag</button>
+    </div>
+    <div class="comments-section">
+      <div class="section-header"><span class="section-title">Comments (<span id="commentCountLabel">${p.comment_count}</span>)</span></div>
+      <div class="comment-form">
+        <textarea class="comment-input" id="commentInput" placeholder="Comment anonymously. No account required."></textarea>
+        <div class="comment-actions">
+          <button class="comment-submit" onclick="submitComment(${p.id})">Post Comment</button>
+          <span class="comment-note">🛡 Anonymous by default</span>
+        </div>
+      </div>
+      <div id="commentList"><div class="loader-text" style="font-family:var(--font-mono);font-size:11px;color:var(--text3)">Loading comments...</div></div>
+    </div>`;
+}
+
+function closeArticle() {
+  document.getElementById('articleView').classList.remove('open');
+  document.body.style.overflow = '';
+  currentPostId = null;
+  loadStats();
+  loadFeed(currentFilter);
+}
+
+async function reactPost(id, type) {
+  if (!token) { openModal('loginModal'); toast('Login to react to reports'); return; }
+  try {
+    const data = await api('POST', `/posts/${id}/${type}`);
+    document.getElementById('likeCount').textContent = data.likes;
+    document.getElementById('dislikeCount').textContent = data.dislikes;
+    document.getElementById('likeBtn').className = 'action-btn' + (type==='like' ? ' liked' : '');
+    document.getElementById('dislikeBtn').className = 'action-btn' + (type==='dislike' ? ' disliked' : '');
+    toast(data.message, 'ok');
+  } catch(e) { toast(e.message, 'err'); }
+}
+
+function sharePost(id) {
+  const url = `${location.origin}${location.pathname}?post=${id}`;
+  navigator.clipboard.writeText(url).then(() => toast('Link copied to clipboard', 'ok')).catch(() => toast('Copy this URL: ' + url));
+}
+
+// ═══════════════════════════════════════════════════
+// COMMENTS
+// ═══════════════════════════════════════════════════
+async function loadComments(postId) {
+  try {
+    const comments = await api('GET', `/comments/${postId}`);
+    renderComments(comments);
+  } catch(e) {
+    const el = document.getElementById('commentList');
+    if (el) el.innerHTML = `<div style="font-size:12px;color:var(--text3)">${e.message}</div>`;
+  }
+}
+
+function renderComments(comments) {
+  const el = document.getElementById('commentList');
+  if (!el) return;
+  if (!comments.length) {
+    el.innerHTML = '<div style="font-family:var(--font-mono);font-size:11px;color:var(--text3);padding:16px 0">No comments yet — be the first.</div>';
+    return;
+  }
+  el.innerHTML = comments.map(c => `
+    <div class="comment">
+      <div class="comment-meta">
+        <span class="comment-author">@${c.author_username}</span>
+        <span class="comment-time">· ${timeAgo(c.created_at)}</span>
+      </div>
+      <div class="comment-text">${c.body}</div>
+    </div>`).join('');
+}
+
+async function submitComment(postId) {
+  const input = document.getElementById('commentInput');
+  const body = input ? input.value.trim() : '';
+  if (!body) { toast('Enter a comment first'); return; }
+  try {
+    await api('POST', `/comments/${postId}`, { body });
+    input.value = '';
+    loadComments(postId);
+    toast('Comment posted anonymously', 'ok');
+  } catch(e) { toast(e.message, 'err'); }
+}
+
+// ═══════════════════════════════════════════════════
+// CREATE POST
+// ═══════════════════════════════════════════════════
+function previewFile() {
+  const file = document.getElementById('mediaFile').files[0];
+  if (!file) return;
+  document.getElementById('uploadText').textContent = `✓ ${file.name} (${(file.size/1024/1024).toFixed(1)}MB)`;
+  if (file.type.startsWith('image/')) {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = document.getElementById('previewImg');
+      img.src = e.target.result;
+      img.style.display = 'block';
+      document.getElementById('filePreview').style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+async function submitPost() {
+  const title = document.getElementById('newTitle').value.trim();
+  const cat   = document.getElementById('newCat').value;
+  const body  = document.getElementById('newBody').value.trim();
+  const err   = document.getElementById('createErr');
+  err.textContent = '';
+
+  if (!title) { err.textContent = 'Headline required'; return; }
+  if (!cat)   { err.textContent = 'Select a category'; return; }
+  if (body.length < 20) { err.textContent = 'Report body too short (minimum 20 characters)'; return; }
+
+  const btn = document.getElementById('createBtn');
+  btn.disabled = true; btn.textContent = 'Submitting...';
+
+  try {
+    const fd = new FormData();
+    fd.append('title', title);
+    fd.append('category', cat);
+    fd.append('body', body);
+    const file = document.getElementById('mediaFile').files[0];
+    if (file) fd.append('media', file);
+
+    await api('POST', '/posts', fd, true);
+    closeModal('createModal');
+    document.getElementById('newTitle').value = '';
+    document.getElementById('newBody').value = '';
+    document.getElementById('newCat').value = '';
+    document.getElementById('mediaFile').value = '';
+    document.getElementById('uploadText').textContent = 'Click or drag to attach image or video';
+    document.getElementById('filePreview').style.display = 'none';
+    toast('Report submitted anonymously ✓', 'ok');
+    loadFeed(currentFilter);
+    loadStats();
+  } catch(e) {
+    err.textContent = e.message;
+  } finally {
+    btn.disabled = false; btn.textContent = 'Submit Report Anonymously';
+  }
+}
+
+// ═══════════════════════════════════════════════════
+// MODALS
+// ═══════════════════════════════════════════════════
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+  document.body.style.overflow = '';
+}
+function clickOutClose(e, id) {
+  if (e.target.id === id) closeModal(id);
+}
+
+// ═══════════════════════════════════════════════════
+// WEBSOCKET LIVE FEED
+// ═══════════════════════════════════════════════════
+function connectWS() {
+  try {
+    ws = new WebSocket(`${WS}/ws/feed`);
+    ws.onopen = () => {
+      document.getElementById('wsStatus').textContent = 'LIVE';
+      document.getElementById('wsStatus').className = 'ws-status ws-ok';
+      clearInterval(wsRetryTimer);
+      // Ping to keep alive
+      wsRetryTimer = setInterval(() => {
+        if (ws && ws.readyState === 1) ws.send('ping');
+      }, 25000);
+    };
+    ws.onmessage = (e) => {
+      try {
+        const msg = JSON.parse(e.data);
+        if (msg.type === 'new_post') {
+          handleLivePost(msg.data);
+        } else if (msg.type === 'new_comment' && currentPostId === msg.data.post_id) {
+          prependLiveComment(msg.data);
+        } else if (msg.type === 'reaction_update') {
+          if (currentPostId === msg.data.post_id) {
+            const lc = document.getElementById('likeCount');
+            const dc = document.getElementById('dislikeCount');
+            if (lc) lc.textContent = msg.data.likes;
+            if (dc) dc.textContent = msg.data.dislikes;
+          }
+        }
+      } catch {}
+    };
+    ws.onclose = () => {
+      document.getElementById('wsStatus').textContent = 'OFFLINE';
+      document.getElementById('wsStatus').className = 'ws-status ws-off';
+      clearInterval(wsRetryTimer);
+      wsRetryTimer = setTimeout(connectWS, 5000);
+    };
+    ws.onerror = () => ws.close();
+  } catch {}
+}
+
+function handleLivePost(post) {
+  // Ticker
+  const wrap = document.getElementById('tickerWrap');
+  const item = document.createElement('span');
+  item.className = 'ticker-item';
+  item.innerHTML = `<span class="live-dot"></span>New ${post.category} report: ${post.title.slice(0,40)}…`;
+  wrap.prepend(item);
+  if (wrap.children.length > 5) wrap.removeChild(wrap.lastChild);
+
+  // Silently prepend to feed if on home and no filter
+  if (!currentFilter && currentMode === 'home' && !document.getElementById('articleView').classList.contains('open')) {
+    loadStats();
+    loadFeed('');
+  }
+}
+
+function prependLiveComment(comment) {
+  const list = document.getElementById('commentList');
+  if (!list) return;
+  const div = document.createElement('div');
+  div.className = 'comment';
+  div.style.borderTop = '1px solid var(--red)';
+  div.innerHTML = `
+    <div class="comment-meta">
+      <span class="comment-author">@${comment.author_username}</span>
+      <span class="comment-time">· just now</span>
+      <span style="font-family:var(--font-mono);font-size:10px;color:var(--red2);margin-left:8px">LIVE</span>
+    </div>
+    <div class="comment-text">${comment.body}</div>`;
+  list.prepend(div);
+}
+
+// ═══════════════════════════════════════════════════
+// DEEP LINK — ?post=ID
+// ═══════════════════════════════════════════════════
+function checkDeepLink() {
+  const params = new URLSearchParams(location.search);
+  const postId = params.get('post');
+  if (postId) openPost(parseInt(postId));
+}
+
+// ═══════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════
+updateNavAuth();
+loadFeed('');
+loadStats();
+loadTrending();
+loadSuggestions();
+connectWS();
+checkDeepLink();
+
+// Reload stats every 60s
+setInterval(loadStats, 60000);
+</script>
+</body>
+</html>
